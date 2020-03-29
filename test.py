@@ -31,12 +31,10 @@ for light in living_room:
     URL = f"https://192.168.1.51/api/is83Oh2YZuNuD4Nqoks0nLmfQw32UaGdvn5hQX9n/lights/{light}/state"
     if lights[light]['state']['on'] == True:
         resp = requests.put(URL, data='{"on": false}', verify=False)
-        print(resp)
-        print(resp.content)
     else:
         resp = requests.put(URL, data='{"on": true}', verify=False)
-        print(resp)
-        print(resp.content)
+    print(resp)
+    print(resp.content)
 
 # <Response [200]>
 # b'[{"success":{"/lights/2/state/on":false}}]'
