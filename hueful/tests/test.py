@@ -1,7 +1,8 @@
-from Group import Group
-from Light import Light
+from Connection import Connection
+from hueful.Group import Group
+from hueful.Light import Light
 
-g = Group()
+
 # print(g.getAllGroups())
 # # ['1', '2', '3', '4', '5', '6', '8']
 #
@@ -21,12 +22,16 @@ g = Group()
 # g.turnLights('1', True)
 # #g.turnLights('1', False)
 
+import pytest
 
 # print(g.getLights())
-print("----")
-print(g.getState(1))
-g.setBri(1,200)
-g.setHue(1,25500)
-g.setSat(1, 100)
-g.setXY(1, [0.555, 0.92])
-g.setCT(1, 500)
+class TestHuey:
+    def test_brightness(self):
+        g = Group(id='1', connection=Connection(verify=False))
+        print("----")
+        print(g.getState(1))
+        g.setBri(200)
+        g.setHue(25500)
+        g.setSat(100)
+        g.setXY([0.555, 0.92])
+        g.setCT(500)
