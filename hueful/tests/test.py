@@ -1,4 +1,4 @@
-from Connection import Connection
+from hueful.Connection import Connection
 from hueful.Group import Group
 from hueful.Light import Light
 

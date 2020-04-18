@@ -4,7 +4,7 @@ import json
 from typing import Iterable, Dict, Optional, List
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-from Connection import Connection
+from hueful.Connection import Connection
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)  # needed to disable SSL check
 
