@@ -3,9 +3,10 @@ from hueful.Group import Group
 
 
 def main():
+    # Connection and Group
     connection = Connection(verify=False)
     g = Group('1', connection=connection)
-    g.setBri(14)
+    g.turnLights(True)
 
 
 if __name__ == '__main__':

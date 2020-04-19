@@ -93,19 +93,15 @@ class Group():
     Methods to modify the group's state:
     '''
 
-    def turnLights(self, id: str, on: bool):
+    def turnLights(self, on: bool):
         """
         Turns the lights on/off
         """
-        try:
-            body = {"on": on}
-            resp = requests.put(self.state_URL, data=json.dumps(body), verify=False)
-            _logger.info(resp.json())
-            #  _logger.info(resp.content)
-        except requests.RequestException as e:
-            _logger.error(f"Couldn't communicate with the server. ({e})")
+        body = {"on": on}
+        self._send_state(body)
 
-    def _send_state(self, state:Dict):
+    def _send_state(self, state: Dict):
+        """Sends given state to hue hub."""
         resp = self.connection.put(
             url=f'/groups/{self.id}/action',
             data=json.dumps(state)
