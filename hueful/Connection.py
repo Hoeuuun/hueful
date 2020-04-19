@@ -12,7 +12,7 @@ class Connection:
         self.server_address = server_address
         self.verify = verify
 
-    def _make_url(self, url_suffix:str) -> str:
+    def _make_url(self, url_suffix: str) -> str:
         return f'{self.server_address}{url_suffix}'
 
     def get(self, url, data=None) -> Dict:
@@ -24,4 +24,3 @@ class Connection:
         full_url = self._make_url(url)
         response = requests.post(full_url, data=data, verify=self.verify)
         return response.json()
-
