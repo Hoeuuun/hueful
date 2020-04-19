@@ -1,3 +1,4 @@
+import hueful.log
 from hueful.Connection import Connection
 from hueful.Group import Group
 
@@ -5,8 +6,10 @@ from hueful.Group import Group
 def main():
     # Connection and Group
     connection = Connection(verify=False)
-    g = Group('1', connection=connection)
-    g.turn_lights(True)
+    groups = connection.get_all_groups()
+    print(f"All groups {groups.keys}")
+    for group in groups.values():
+        group.turn_on(False)
 
 
 if __name__ == '__main__':

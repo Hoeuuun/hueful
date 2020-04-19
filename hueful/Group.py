@@ -1,158 +1,67 @@
 import requests
-import logging
-import json
 from typing import Iterable, Dict, Optional, List
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
-from hueful.Connection import Connection
+from hueful.AbstractLight import AbstractLight
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)  # needed to disable SSL check
 
-FORMAT = '%(asctime)-15s %(message)s'
-logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 
-_logger = logging.getLogger(__name__)
-_logger.setLevel(logging.DEBUG)
-
-
-class Group():
-    def __init__(self, id=None, connection: Connection = None):
-        self.id = id
-        # self.URL = "https://192.168.1.51/api/is83Oh2YZuNuD4Nqoks0nLmfQw32UaGdvn5hQX9n/groups"
-        # self._refresh_state()
-        # self.state_URL = self.URL + f"/{id}/action"
-        self.connection = connection
+class Group(AbstractLight):
+    def __init__(self, id=None, connection: 'Connection' = None):
+        super().__init__(id, connection)
+        self._url_infix = 'groups'
 
     def _refresh_state(self) -> Dict:
-        """
-        Refreshes and returns the state directly from the HUE server
-        """
-        try:
-            response = requests.get(self.URL, verify=False)
-            # _logger.info(response.json())
-            self.data = self.connection.get('groups')
-            self.ids = [id for id in self.data]
-            return self.data
-        except requests.RequestException as e:
-            _logger.error("can't get state from HUE bridge.")
-            raise e
+        super()._refresh_state()
 
-    def get_all_groups(self) -> Iterable[str]:
-        """
-        Returns a list of all groups in the system
-        """
-        return self._refresh_state().keys()
+    # def get_group(self):
+    #     """
+    #     Returns a dictionary of data for a particular group id
+    #     """
+    #     return self._refresh_state()[id]
+    #
+    # def get_group_by_room(self, room: str) -> Optional[Dict]:
+    #     """
+    #     Returns a dictonary of data for a particular group name
+    #     """
+    #     data = self._refresh_state()
+    #     for id in data.keys():
+    #         if data[id]['name'] == room:
+    #             return data[id]
+    #
+    #     _logger.info(f"Cannot find {room} lights!")
+    #     return None
 
-    def get_group(self, id):
-        """
-        Returns a dictionary of data for a particular group id
-        """
-        return self._refresh_state()[id]
-
-    def get_group_by_room(self, room: str) -> Optional[Dict]:
-        """
-        Returns a dictonary of data for a particular group name
-        """
-        data = self._refresh_state()
-        for id in data.keys():
-            if data[id]['name'] == room:
-                return data[id]
-
-        _logger.info(f"Cannot find {room} lights!")
-        return None
-
-    def get_lights(self):
-        """
-        Returns a list of all light IDs in the system.
-        All lights in the system are part of the immutable group 0.
-        """
-        URL = self.URL + "/lights"
-        try:
-            resp = requests.get(URL, verify=False)
-            _logger.info(resp.json())
-            data = resp.json()
-            lights = data['lights']
-            return lights
-        except requests.RequestException as e:
-            _logger.error("can't get lights from HUE bridge.")
-            raise e
-
-    def getState(self, id: str):
+    def get_state(self) -> Dict:
         """
         Returns a dictionary of the group's current state
         """
-        try:
-            data = self.connection.get(f'/groups/{id}')
-            state = data['action']
-            return state
-        except requests.RequestException as e:
-            _logger.error("can't get state from HUE bridge.")
-            raise e
+        return self._refresh_state()["action"]
+
+    def _send_state(self, state: Dict):
+        super()._send_state(state)
 
     '''
     Methods to modify the group's state:
     '''
 
-    def turn_lights(self, on: bool):
-        """
-        Toggles the lights on and off
-        """
-        body = {"on": on}
-        self._send_state(body)
-
-    def _send_state(self, state: Dict):
-        """
-        Sends given state to hue hub
-        """
-        resp = self.connection.put(
-            url_suffix=f'/groups/{self.id}/action',
-            data=json.dumps(state)
-        )
-        _logger.info(f'Send state: {state}')
+    def turn_on(self, on: bool):
+        super().turn_on(on)
 
     def set_bri(self, bri: int):
-        """
-        Sets the brightness, 0 - 254
-        :throws: AssertionError if brightness not within 0-254 in_range
-                 RquestException if calling HUE Server did not succeed.
-        """
-        assert 0 <= bri <= 254
-        body = {"bri": bri}
-        self._send_state(body)
+        super().set_bri(bri)
 
     def set_hue(self, hue: int):
-        """
-        Sets the hue, 0 - 65535
-        Red = 0, 65535
-        Green = 25500
-        Blue = 46920
-        """
-        assert 0 <= hue <= 65535
-        body = {"hue": hue}
-        self._send_state(body)
+        super().set_hue(hue)
 
     def set_sat(self, sat: int):
-        """
-        Sets the staturation, 0 - 254
-        """
-        assert 0 <= sat <= 254
-        body = {"sat": sat}
-        self._send_state(body)
+        super().set_sat(sat)
 
     def set_xy(self, xy: List[float]):
-        """
-        Sets the X and Y coordinates of a color in the CIE color space, 0.0 - 1.0
-        """
-        assert xy[0] >= 0 and 1 >= xy[1] >= 0 and xy[1] <= 1
-        body = {"xy": [xy[0], xy[1]]}
-        self._send_state(body)
+        super().set_sat(xy)
 
     def set_ct(self, ct: int):
-        """
-        Sets the Mired Color temperature, 153 (6500K) - 500 (2000K)
-        """
-        assert 153 <= ct <= 500
-        body = {"ct": ct}
-        self._send_state(body)
+        super().set_ct(ct)
 
     # TODO: alert, effect, transitiontime, increments for each, scene
