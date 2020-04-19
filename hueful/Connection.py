@@ -15,12 +15,12 @@ class Connection:
     def _make_url(self, url_suffix: str) -> str:
         return f'{self.server_address}{url_suffix}'
 
-    def get(self, url, data=None) -> Dict:
-        full_url = self._make_url(url)
+    def get(self, url_suffix: str, data: str = None) -> Dict:
+        full_url = self._make_url(url_suffix)
         response = requests.get(full_url, data=data, verify=self.verify)
         return response.json()
 
-    def put(self, url, data=None):
-        full_url = self._make_url(url)
+    def put(self, url_suffix: str, data: str = None):
+        full_url = self._make_url(url_suffix)
         response = requests.post(full_url, data=data, verify=self.verify)
         return response.json()

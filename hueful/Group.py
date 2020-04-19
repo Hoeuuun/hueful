@@ -37,19 +37,19 @@ class Group():
             _logger.error("can't get state from HUE bridge.")
             raise e
 
-    def getAllGroups(self) -> Iterable[str]:
+    def get_all_groups(self) -> Iterable[str]:
         """
         Returns a list of all groups in the system
         """
         return self._refresh_state().keys()
 
-    def getGroup(self, id):
+    def get_group(self, id):
         """
         Returns a dictionary of data for a particular group id
         """
         return self._refresh_state()[id]
 
-    def getGroupByRoom(self, room: str) -> Optional[Dict]:
+    def get_group_by_room(self, room: str) -> Optional[Dict]:
         """
         Returns a dictonary of data for a particular group name
         """
@@ -61,7 +61,7 @@ class Group():
         _logger.info(f"Cannot find {room} lights!")
         return None
 
-    def getLights(self):
+    def get_lights(self):
         """
         Returns a list of all light IDs in the system.
         All lights in the system are part of the immutable group 0.
@@ -93,63 +93,65 @@ class Group():
     Methods to modify the group's state:
     '''
 
-    def turnLights(self, on: bool):
+    def turn_lights(self, on: bool):
         """
-        Turns the lights on/off
+        Toggles the lights on and off
         """
         body = {"on": on}
         self._send_state(body)
 
     def _send_state(self, state: Dict):
-        """Sends given state to hue hub."""
+        """
+        Sends given state to hue hub
+        """
         resp = self.connection.put(
-            url=f'/groups/{self.id}/action',
+            url_suffix=f'/groups/{self.id}/action',
             data=json.dumps(state)
         )
         _logger.info(f'Send state: {state}')
 
-    def setBri(self, bri: int):
+    def set_bri(self, bri: int):
         """
         Sets the brightness, 0 - 254
         :throws: AssertionError if brightness not within 0-254 in_range
                  RquestException if calling HUE Server did not succeed.
         """
-        assert bri >= 0 and bri <= 254
+        assert 0 <= bri <= 254
         body = {"bri": bri}
         self._send_state(body)
 
-    def setHue(self, hue: int):
+    def set_hue(self, hue: int):
         """
         Sets the hue, 0 - 65535
         Red = 0, 65535
         Green = 25500
         Blue = 46920
         """
-        assert hue >= 0 and hue <= 65535
+        assert 0 <= hue <= 65535
         body = {"hue": hue}
         self._send_state(body)
 
-    def setSat(self, sat: int):
+    def set_sat(self, sat: int):
         """
         Sets the staturation, 0 - 254
         """
-        assert sat >= 0 and sat <= 254
+        assert 0 <= sat <= 254
         body = {"sat": sat}
         self._send_state(body)
 
-    def setXY(self, xy: List[float]):
+    def set_xy(self, xy: List[float]):
         """
         Sets the X and Y coordinates of a color in the CIE color space, 0.0 - 1.0
         """
-        assert xy[0] >= 0 and xy[1] <= 1 and xy[1] >= 0 and xy[1] <= 1
+        assert xy[0] >= 0 and 1 >= xy[1] >= 0 and xy[1] <= 1
         body = {"xy": [xy[0], xy[1]]}
         self._send_state(body)
 
-    def setCT(self, ct: int):
+    def set_ct(self, ct: int):
         """
         Sets the Mired Color temperature, 153 (6500K) - 500 (2000K)
         """
-        assert ct >= 153 and ct <= 500
+        assert 153 <= ct <= 500
         body = {"ct": ct}
         self._send_state(body)
 
