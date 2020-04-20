@@ -25,7 +25,7 @@ class Connection:
 
     def put(self, url_suffix: str, data: str = None):
         full_url = self._make_url(url_suffix)
-        response = requests.post(full_url, data=data, verify=self.verify)
+        response = requests.put(full_url, data=data, verify=self.verify)
         return response.json()
 
     def get_all_groups(self) -> Dict[str, Group]:

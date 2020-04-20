@@ -21,7 +21,7 @@ class AbstractLight:
         Sends given state to the HUE hub
         """
         resp = self.connection.put(
-            url_suffix=f'/{self._url_infix}/{self.id}/action',
+            url_suffix=f'/{self._url_infix}/{self.id}/{self._state}',
             data=json.dumps(state)
         )
         _logger.info(f'Send state: {state}')

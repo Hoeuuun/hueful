@@ -11,6 +11,7 @@ class Light(AbstractLight):
     def __init__(self, id=None, connection: 'Connection' = None):
         super().__init__(id, connection)
         self._url_infix = 'lights'
+        self._state = 'state'
 
     def _refresh_state(self) -> Dict:
         super()._refresh_state()
