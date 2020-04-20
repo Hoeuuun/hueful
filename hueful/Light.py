@@ -45,5 +45,8 @@ class Light(AbstractLight):
     def set_ct(self, ct: int):
         super().set_ct(ct)
 
-    # TODO: alert, effect, transitiontime, increments for each, scene
+    def set_effect(self, effect: bool):
+        super().set_effect(effect)
+
+    # TODO: alert, transitiontime, increments for each, scene
 

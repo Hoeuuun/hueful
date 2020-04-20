@@ -36,4 +36,3 @@ class Connection:
         return {
             x: Group(id=x, connection=self)
             for x in group_json.keys()}
-

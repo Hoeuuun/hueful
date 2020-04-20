@@ -7,9 +7,12 @@ def main():
     # Connection and Group
     connection = Connection(verify=False)
     groups = connection.get_all_groups()
-    print(f"All groups {groups.keys}")
-    for group in groups.values():
-        group.turn_on(False)
+    print(f"All groups {groups.keys()}")
+    # for group in groups.items():
+    #     print("group", group)
+
+    g1 = Group()
+    # print(g1.set_effect(True))
 
 
 if __name__ == '__main__':

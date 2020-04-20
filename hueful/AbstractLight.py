@@ -18,7 +18,7 @@ class AbstractLight:
 
     def _send_state(self, state: Dict):
         """
-        Sends given state to Hue hub
+        Sends given state to the HUE hub
         """
         resp = self.connection.put(
             url_suffix=f'/{self._url_infix}/{self.id}/action',
@@ -86,3 +86,17 @@ class AbstractLight:
         assert 153 <= ct <= 500
         body = {"ct": ct}
         self._send_state(body)
+
+    def set_effect(self, effect: bool):
+        """
+        Set the "colorloop" effect, which cycles through all hues using
+        the current brightness and saturation
+        colorloop = True,
+        none = False
+        """
+        if effect:
+            body = {"effect": "colorloop"}
+        else:
+            body = {"effect": "none"}
+        self._send_state(body)
+
