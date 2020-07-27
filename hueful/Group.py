@@ -14,25 +14,7 @@ class Group(AbstractLight):
         self._state = 'action'
 
     def _refresh_state(self) -> Dict:
-        super()._refresh_state()
-
-    # def get_group(self):
-    #     """
-    #     Returns a dictionary of data for a particular group id
-    #     """
-    #     return self._refresh_state()[id]
-    #
-    # def get_group_by_room(self, room: str) -> Optional[Dict]:
-    #     """
-    #     Returns a dictonary of data for a particular group name
-    #     """
-    #     data = self._refresh_state()
-    #     for id in data.keys():
-    #         if data[id]['name'] == room:
-    #             return data[id]
-    #
-    #     _logger.info(f"Cannot find {room} lights!")
-    #     return None
+        return super()._refresh_state()
 
     def get_state(self) -> Dict:
         """

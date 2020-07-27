@@ -15,7 +15,7 @@ def main():
     g1 = Group(1, connection)
     g1.turn_on(True)
     g1.set_effect(False)
-    g1.set_bri(100)
+    g1.set_bri(50)
     # print(g1.set_effect(True))
 
     l2 = Light(2, connection)
