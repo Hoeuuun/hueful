@@ -22,8 +22,7 @@ def make_rest_api_blueprint() -> Blueprint:
         # return JSON of just the given room
         c = Connection()
 
-        # change this back to room_id later
-        return jsonify(c.get('/groups/1'))
+        return jsonify(c.get(f'/groups/{room_id}'))
 
     @huey_api_bp.route('/rooms/<int:room_id>/state/', methods=['GET'])
     def get_state(room_id):
@@ -34,12 +33,30 @@ def make_rest_api_blueprint() -> Blueprint:
 
         return jsonify(group_state)
 
+    @huey_api_bp.route('/lights/<int:light_id>/', methods=['GET'])
+    def get_light_state(light_id):
+        # turn a single line off and on
+        c = Connection()
+        hue_response = c.get(f'/lights/{light_id}')
+        print(hue_response)
+
+        return jsonify(hue_response, HTTPStatus.OK)
+
     @huey_api_bp.route('/lights/<int:light_id>/state/', methods=['PUT'])
     def set_light_state(light_id):
         # turn a single line off and on
         c = Connection()
         json_data = request.get_json()
-        hue_response = c.put(f'/lights/{light_id}/state/', json_data)
+        hue_response = c.put(f'/lights/{light_id}/state', json_data)
+
+        return jsonify(hue_response, HTTPStatus.OK)
+
+    @huey_api_bp.route('/rooms/<int:room_id>/action/', methods=['PUT'])
+    def turn_room_lights(room_id):
+        # return JSON of just the given room
+        c = Connection()
+        json_data = request.get_json()
+        hue_response = c.put(f'/groups/{room_id}/action', json_data)
 
         return jsonify(hue_response, HTTPStatus.OK)
 
